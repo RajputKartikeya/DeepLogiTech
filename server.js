@@ -6,19 +6,16 @@ const PORT = 80;
 
 app.get("/getTimeStories", async (req, res) => {
   try {
-    // Fetch HTML from Time.com
     const html = await fetchHtml("https://time.com");
-
-    // Extract latest stories
     const stories = parseStories(html);
 
-    res.json(stories.slice(0, 6)); // Return first 6 stories
+    res.json(stories.slice(0, 6));
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-// Helper: Fetch HTML content
+//Fetch HTML content
 function fetchHtml(url) {
   return new Promise((resolve, reject) => {
     https
@@ -31,7 +28,7 @@ function fetchHtml(url) {
   });
 }
 
-// Helper: Parse stories from HTML
+// Parse stories from HTML
 function parseStories(html) {
   const stories = [];
   const splitMarker = '<li class="latest-stories__item">';
@@ -54,7 +51,7 @@ function extractHref(htmlPart) {
   return hrefMatch ? hrefMatch[1] : "";
 }
 
-// Extract title text (remove HTML tags)
+// Extract title text
 function extractTitle(htmlPart) {
   const titleMatch = htmlPart.match(/<a [^>]*>([\s\S]*?)<\/a>/);
   if (!titleMatch) return "";
